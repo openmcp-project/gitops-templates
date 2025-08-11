@@ -11,10 +11,14 @@ tasks:
   build:
     desc: Build ocm component
     cmds:
-      - ocm add componentversions --copy-resources --force --create --file .out --settings settings.yaml component-constructor.yaml
+      - |
+        ocm add componentversions \
+        --copy-resources --force --create \
+        --file .out \
+        --settings settings.yaml \
+        component-constructor.yaml
 
   push:
-
     desc: Push to OCM Registry
     cmds:
       - ocm transfer ctf -f .out "{{.COMPONENT_REGISTRY}}" {{.overwrite_mod}}
@@ -27,7 +31,10 @@ tasks:
   flux:
     desc: Renders the latest flux template using the flux cli
     cmds:
-      - flux install --export --components-extra="image-reflector-controller,image-automation-controller" > gotk-components.yaml
+      - |
+        flux install --export \
+        --components-extra="image-reflector-controller,image-automation-controller" \
+        > gotk-components.yaml
     dir: ./templates/fluxcd
 
   pull:
