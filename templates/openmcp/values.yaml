@@ -1,0 +1,3 @@
+openmcpOperator:
+    image: ghcr.io/openmcp-project/images/openmcp-operator
+    tag: v0.9.1

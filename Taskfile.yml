@@ -1,0 +1,57 @@
+version: '3'
+
+includes:
+  release:
+    taskfile: hack/common/tasks_rls.yaml
+    aliases:
+    - rls
+    - r
+
+tasks:
+  build:
+    desc: Build ocm component
+    cmds:
+      - ocm add componentversions --copy-resources --force --create --file .out --settings settings.yaml component-constructor.yaml
+
+  push:
+
+    desc: Push to OCM Registry
+    cmds:
+      - ocm transfer ctf -f .out "{{.COMPONENT_REGISTRY}}" {{.overwrite_mod}}
+    vars:
+      overwrite_mod:
+        sh: 'if [[ -n ${OVERWRITE_COMPONENTS:-} ]] && [[ ${OVERWRITE_COMPONENTS} != "false" ]]; then echo -n "--overwrite"; fi'
+      COMPONENT_REGISTRY:
+        sh: 'PROJECT_ROOT="{{.ROOT_DIR2}}" hack/common/get-registry.sh --component'
+
+  flux:
+    desc: Renders the latest flux template using the flux cli
+    cmds:
+      - flux install --export --components-extra="image-reflector-controller,image-automation-controller" > gotk-components.yaml
+    dir: ./templates/fluxcd
+
+  pull:
+    desc: Pulls the resources from the gitops-template ocm.
+    cmds:
+      - |
+        ocm download resources \
+        --downloader ocm/dirtree \
+        --repo OCIRegistry::ghcr.io/n3rdc4ptn/ocm \
+        github.com/openmcp-project/gitops-templates:0.0.2 \
+        openmcp fluxcd
+
+  template:
+    desc: Testing command just to show the templates
+    cmds:
+      - |
+        helm template --output-dir {{.OUTPUT_DIR}} \
+        --set openmcpOperator.image="ghcr.io/openmcp-project/images/openmcp-operator" \
+        --set openmcpOperator.tag="latest" \
+        ./github.com/openmcp-project/gitops-templates/0.0.2/openmcp
+      - |
+        helm template --output-dir {{.OUTPUT_DIR}} \
+        --set openmcpOperator.image="ghcr.io/openmcp-project/images/openmcp-operator" \
+        --set openmcpOperator.tag="latest" \
+        ./github.com/openmcp-project/gitops-templates/0.0.2/openmcp
+    vars:
+      OUTPUT_DIR: "output"
