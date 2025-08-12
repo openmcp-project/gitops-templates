@@ -1,9 +1,9 @@
 components:
-  - name: "github.com/openmcp-project/gitops-templates"
-    version: "${OPENMCP_VERSION}"
+  - name: "${REPO_URL}"
+    version: "${VERSION}"
     labels:
       - name: "org.opencontainers.image.source"
-        value: "https://github.com/openmcp-project/gitops-templates"
+        value: "${REPO_URL}"
     provider:
       name: openmcp-project
     resources:
@@ -25,8 +25,8 @@ components:
           path: ./templates/fluxcd
       - name: gitops-templates
         type: blob
-        version: ${OPENMCP_VERSION}
+        version: ${VERSION}
         access:
           type: gitHub
-          repoUrl: "https://github.com/openmcp-project/gitops-templates"
+          repoUrl: "${REPO_URL}"
           commit: "2bdf15aab6df0234ef7621d4a876e4e37eaf1fa0"

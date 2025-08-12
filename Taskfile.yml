@@ -6,31 +6,69 @@ includes:
     aliases:
     - rls
     - r
-    vars:
-      VERSION:
-        sh: 'cat VERSION'
-      TASKFILE_DIR2: "hack/common"
+
+  tools:
+    taskfile: hack/common/tasks_tools.yaml
+    aliases:
+      - tools
+      - t
+
+vars:
+  REPO_URL: "github.com/openmcp-project/gitops-templates"
+  VERSION:
+    sh: 'cat VERSION'
+  COMMIT:
+    sh: '( cd "{{.ROOT_DIR2}}"; git rev-parse HEAD )'
+  ROOT_DIR2: '{{.ROOT_DIR | trimSuffix "/common" | trimSuffix "/hack"}}'
+  TASKFILE_DIR2:
+    sh: 'if [[ "{{.TASKFILE_DIR}}" == "{{.ROOT_DIR2}}" ]] || [[ "{{.TASKFILE_DIR}}" == "" ]]; then echo -n "{{.ROOT_DIR2}}/hack/common"; else echo -n "{{.TASKFILE_DIR}}"; fi'
+  LOCALBIN: '{{ env "LOCALBIN" | default ( .LOCALBIN | default (print .ROOT_DIR2 "/bin") ) }}'
+  LOCALTMP: '{{ env "LOCALTMP" | default ( .LOCALTMP | default (print .ROOT_DIR2 "/tmp") ) }}'
+  JQ: '{{ .JQ | default (print .LOCALBIN "/jq") }}'
+  HELM: '{{ .HELM | default (print .LOCALBIN "/helm") }}'
+  YAML2JSON: '{{ .YAML2JSON | default (print .LOCALBIN "/yaml2json") }}'
+  OCM: '{{ .OCM | default (print .LOCALBIN "/ocm") }}'
+  ENVTEST: '{{ .ENVTEST | default (print .LOCALBIN "/setup-envtest") }}'
 
 tasks:
   build:
+    deps:
+    - tools:ocm
+    - tools:localtmp
+    vars:
+      compdir: '{{.LOCALTMP}}/component'
     desc: Build ocm component
     cmds:
+      # - |
+      #   ocm add componentversions \
+      #   --copy-resources --force --create \
+      #   --file {{.compdir}} \
+      #   --settings settings.yaml \
+      #   component-constructor.yaml
       - |
-        ocm add componentversions \
-        --copy-resources --force --create \
-        --file .out \
-        --settings settings.yaml \
-        component-constructor.yaml
+        "{{.OCM}}" add componentversions \
+            --file "{{.compdir}}" \
+            --version "{{.VERSION}}" \
+            --create --force \
+            --settings {{.ROOT_DIR2}}/settings.yaml \
+            --templater subst "{{.ROOT_DIR2}}/component-constructor.yaml" -- \
+            VERSION="{{.VERSION}}" \
+            COMMIT="{{.COMMIT}}" \
+            REPO_URL="{{.REPO_URL}}"
   lint:
     desc: Lint YAML files in templates directory
     cmds:
       - yamllint templates
 
   push:
+    deps:
+    - tools:ocm
+    - tools:localtmp
     desc: Push to OCM Registry
     cmds:
-      - ocm transfer ctf -f .out "{{.COMPONENT_REGISTRY}}" {{.overwrite_mod}}
+      - ocm transfer ctf -f {{.compdir}} "{{.COMPONENT_REGISTRY}}" {{.overwrite_mod}}
     vars:
+      compdir: '{{.LOCALTMP}}/component'
       overwrite_mod:
         sh: 'if [[ -n ${OVERWRITE_COMPONENTS:-} ]] && [[ ${OVERWRITE_COMPONENTS} != "false" ]]; then echo -n "--overwrite"; fi'
       COMPONENT_REGISTRY:
