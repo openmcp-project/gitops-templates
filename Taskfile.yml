@@ -66,3 +66,8 @@ tasks:
         ./github.com/openmcp-project/gitops-templates/0.0.2/openmcp
     vars:
       OUTPUT_DIR: "output"
+
+  version:
+    desc: Prints the current version of the project
+    cmds:
+      - cat VERSION
