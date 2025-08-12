@@ -83,7 +83,7 @@ tasks:
         flux install --export \
         --components-extra="image-reflector-controller,image-automation-controller" \
         > gotk-components.yaml
-    dir: ./templates/fluxcd
+    dir: ./templates/fluxcd/resources
 
   pull:
     desc: Pulls the resources from the gitops-template ocm.
