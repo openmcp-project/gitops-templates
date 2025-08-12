@@ -5,12 +5,10 @@ on:
     paths:
       - "templates/**.yaml"
       - "templates/**.yml"
-      - "templates/**/kustomization.yaml"
   push:
     paths:
       - "templates/**.yaml"
       - "templates/**.yml"
-      - "templates/**/kustomization.yaml"
 
 jobs:
   lint:
@@ -24,8 +22,11 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install yamllint
-        run: pip install yamllint
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Lint YAML files
-        run: yamllint templates/
+      - name: Run lint task
+        run: task lint

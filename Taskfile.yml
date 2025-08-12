@@ -17,6 +17,10 @@ tasks:
         --file .out \
         --settings settings.yaml \
         component-constructor.yaml
+  lint:
+    desc: Lint YAML files in templates directory
+    cmds:
+      - yamllint templates
 
   push:
     desc: Push to OCM Registry
