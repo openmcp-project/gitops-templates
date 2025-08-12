@@ -6,6 +6,10 @@ includes:
     aliases:
     - rls
     - r
+    vars:
+      VERSION:
+        sh: 'cat VERSION'
+      TASKFILE_DIR2: "hack/common"
 
 tasks:
   build:
