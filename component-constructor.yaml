@@ -1,0 +1,32 @@
+components:
+  - name: "github.com/openmcp-project/gitops-templates"
+    version: "${OPENMCP_VERSION}"
+    labels:
+      - name: "org.opencontainers.image.source"
+        value: "https://github.com/openmcp-project/gitops-templates"
+    provider:
+      name: openmcp-project
+    resources:
+      - name: openmcp-operator
+        type: ociImage
+        input:
+          type: ociImage
+          path: ghcr.io/openmcp-project/images/openmcp-operator:${OPENMCP_OPERATOR_VERSION}
+          repository: openmcp-project/openmcp-operator
+      - name: openmcp
+        type: fileSystem
+        input:
+          type: dir
+          path: ./templates/openmcp
+      - name: fluxcd
+        type: fileSystem
+        input:
+          type: dir
+          path: ./templates/fluxcd
+      - name: gitops-templates
+        type: blob
+        version: ${OPENMCP_VERSION}
+        access:
+          type: gitHub
+          repoUrl: "https://github.com/openmcp-project/gitops-templates"
+          commit: "2bdf15aab6df0234ef7621d4a876e4e37eaf1fa0"

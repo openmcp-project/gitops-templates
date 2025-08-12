@@ -1,0 +1,8 @@
+git:
+    repoUrl: ""
+    mainBranch: ""
+
+# maybe like this
+envs:
+    - git:
+         branch: ""

@@ -1,0 +1,7 @@
+apiVersion: openmcp.cloud/v1alpha1
+kind: PlatformService
+metadata:
+  name: usage-operator
+spec:
+  image: "ghcr.io/openmcp-project/images/usage-operator:v0.0.11"
+  imagePullSecrets: []

@@ -1,0 +1,32 @@
+name: Lint YAML and Kustomization
+
+on:
+  pull_request:
+    paths:
+      - "templates/**.yaml"
+      - "templates/**.yml"
+  push:
+    paths:
+      - "templates/**.yaml"
+      - "templates/**.yml"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run lint task
+        run: task lint
