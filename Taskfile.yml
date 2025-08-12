@@ -35,16 +35,14 @@ tasks:
     deps:
     - tools:ocm
     - tools:localtmp
+    requires:
+      vars:
+      - VERSION
+      - REPO_URL
     vars:
       compdir: '{{.LOCALTMP}}/component'
     desc: Build ocm component
     cmds:
-      # - |
-      #   ocm add componentversions \
-      #   --copy-resources --force --create \
-      #   --file {{.compdir}} \
-      #   --settings settings.yaml \
-      #   component-constructor.yaml
       - |
         "{{.OCM}}" add componentversions \
             --file "{{.compdir}}" \
@@ -63,10 +61,14 @@ tasks:
   push:
     deps:
     - tools:ocm
-    - tools:localtmp
     desc: Push to OCM Registry
+    run: once
+    requires:
+      vars:
+      - VERSION
+      - LOCALTMP
     cmds:
-      - ocm transfer ctf -f {{.compdir}} "{{.COMPONENT_REGISTRY}}" {{.overwrite_mod}}
+      - '{{.OCM}} transfer ctf -f {{.compdir}} "{{.COMPONENT_REGISTRY}}" {{.overwrite_mod}}'
     vars:
       compdir: '{{.LOCALTMP}}/component'
       overwrite_mod:
