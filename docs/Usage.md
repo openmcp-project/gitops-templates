@@ -40,19 +40,4 @@ github.com/
 
 ## Rendering a template
 
-To render a template you can use helm, but you can also use our bootstrapper cli.
-
-To use helm first create a values.yaml:
-
-```yaml
-# values.yaml
-openmcpOperator:
-    image: ghcr.io/openmcp-project/images/openmcp-operator
-    tag: v0.9.1
-
-platformClusterKubeconfigSecretName: "platform-kubeconfig"
-```
-
-```bash
-> helm template --output-dir output --values values.yaml github.com/openmcp-project/gitops-templates/v0.0.1/openmcp
-```
+For detailed instructions on rendering templates, see the [Templating guide](./Templating.md).
