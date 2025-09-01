@@ -24,3 +24,19 @@ spec:
   sourceRef:
     kind: GitRepository
     name: environments
+
+
+
+##
+GITREPO/
+  envs/
+    dev/ envName
+      flux-system/
+        gotk-sync-gitrepo.yaml
+        gotk-sync-kustomization.yaml (envPathFluxSystem zeigt auf parent /envs/dev/flux-system)
+        kustomization.yaml (targetpath zeigt auf ../../../resources/flux-system)
+  resources/
+    flux-system/ TARGETPATH
+      gotk-components.yaml
+      gotk-sync.yaml
+      kustomization.yaml

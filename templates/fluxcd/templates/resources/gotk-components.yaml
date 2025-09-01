@@ -5344,6 +5344,8 @@ spec:
           name: data
         - mountPath: /tmp
           name: tmp
+      imagePullSecrets:
+      - name: \{\{ .Values.imagePullSecret }}
       nodeSelector:
         kubernetes.io/os: linux
       priorityClassName: system-cluster-critical
@@ -7240,6 +7242,8 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: temp
+      imagePullSecrets:
+      - name: \{\{ .Values.imagePullSecret }}
       nodeSelector:
         kubernetes.io/os: linux
       priorityClassName: system-cluster-critical
@@ -11042,6 +11046,8 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: temp
+      imagePullSecrets:
+      - name: \{\{ .Values.imagePullSecret }}
       nodeSelector:
         kubernetes.io/os: linux
       priorityClassName: system-cluster-critical
@@ -13021,6 +13027,8 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: temp
+      imagePullSecrets:
+      - name: \{\{ .Values.imagePullSecret }}
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
@@ -14131,6 +14139,8 @@ spec:
           name: temp
         - mountPath: /data
           name: data
+      imagePullSecrets:
+      - name: \{\{ .Values.imagePullSecret }}
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
@@ -14964,6 +14974,8 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: temp
+      imagePullSecrets:
+      - name: \{\{ .Values.imagePullSecret }}
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:

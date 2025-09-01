@@ -1,0 +1,8 @@
+---
+resources:
+  - gotk-components.yaml
+  - gotk-sync.yaml
+images:
+  - name: ghcr.io/fluxcd/source-controller
+    newName: {{ .Values.sourceControllerImage }}
+  - name: ghcr.io/fluxcd/notification-controller

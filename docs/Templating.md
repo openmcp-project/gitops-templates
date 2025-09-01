@@ -34,7 +34,7 @@ git:
 When rendering the `overlays` files, the following values are used:
 
 ```yaml
-targetPath: "" # The path were the fluxcd resources are lying relative to the overlays
+fluxCDResourcesPath: "" # The path were the fluxcd resources are lying relative to the overlays
 gitRepoEnvBranch: "" # The branch for this environment to look at
 envPathFluxSystem: "" # The path were the env overlays are located at from the root of the git repo
 ```
@@ -42,6 +42,7 @@ envPathFluxSystem: "" # The path were the env overlays are located at from the r
 ### OpenMCP
 
 ```yaml
+openMCPResourcesPath: "" # The path were the fluxcd resources are lying relative to the overlays
 openMCPOperator:
     image: "" # the image of the openmcp operator to use
     tag: "" # the tag of the image of the openmcp operator you want to use for deployment
