@@ -14,6 +14,7 @@ includes:
       - t
 
 vars:
+  MODULE_NAME: "gitops-templates"
   REPO_URL: "github.com/openmcp-project/gitops-templates"
   VERSION:
     sh: 'cat VERSION'
