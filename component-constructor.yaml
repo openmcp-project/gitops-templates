@@ -7,12 +7,6 @@ components:
     provider:
       name: openmcp-project
     resources:
-      - name: openmcp-operator
-        type: ociImage
-        input:
-          type: ociImage
-          path: ghcr.io/openmcp-project/images/openmcp-operator:${OPENMCP_OPERATOR_VERSION}
-          repository: openmcp-project/openmcp-operator
       - name: openmcp
         type: fileSystem
         input:
@@ -29,4 +23,4 @@ components:
         access:
           type: gitHub
           repoUrl: "${REPO_URL}"
-          commit: "2bdf15aab6df0234ef7621d4a876e4e37eaf1fa0"
+          commit: "${COMMIT}"
