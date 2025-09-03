@@ -69,11 +69,8 @@ gitRepoEnvBranch: ""
 ### OpenMCP
 
 ```yaml
-openMCPResourcesPath: "" # The path were the fluxcd resources are lying relative to the overlays
+openMCPResourcesPath: "" # The path were the fluxcd resources are lying relative to the overlays (e.g. ../../../resources/openmcp)
 openMCPOperator:
     image: "" # the image of the openmcp operator to use
     tag: "" # the tag of the image of the openmcp operator you want to use for deployment
-
-onboardingClusterKubeconfigSecretName: "" # the secret name for the onboarding cluster; must be located in the openmcp-system namespace
-platformClusterKubeconfigSecretName: "" # the secret name for the platform cluster; must be located in the openmcp-system namespace
 ```
