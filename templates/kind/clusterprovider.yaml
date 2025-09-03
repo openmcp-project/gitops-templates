@@ -1,6 +1,0 @@
-apiVersion: openmcp.cloud/v1alpha1
-kind: ClusterProvider
-metadata:
-  name: kind
-spec:
-  image: "ghcr.io/openmcp-project/images/cluster-provider-kind:v0.0.7"
