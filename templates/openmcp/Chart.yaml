@@ -1,3 +1,4 @@
+---
 apiVersion: v2
 name: gitops-templates-openmcp
 description: GitOps Template for deploying openmcp
