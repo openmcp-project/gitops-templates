@@ -26,27 +26,51 @@ platformClusterKubeconfigSecretName: "platform-kubeconfig"
 resources files:
 
 ```yaml
+# The information for the git repo
 git:
-    repoUrl: "" # The url to the github gitops repository
-    mainBranch: "" # The main branch of the gitops repository (most of the time, set it to 'main')
+    repoUrl: ""
+    mainBranch: ""
+
+# Image pull secrets to be added to all deployments
+imagePullSecrets: []
+    # - name: my-registry-secret
+
+# Image replacement variables
+# You can either specify a prefix which is put in front of xxx-controller or directly specify the images
+images:
+    prefix: "ghcr.io/openmcp-project/fluxcd"
+    sourceController:
+        image: "ghcr.io/fluxcd/source-controller"
+        tag: "latest" # optional
+        digest: "" # optional
+    notificationController:
+        image: "ghcr.io/fluxcd/notification-controller"
+    kustomizeController:
+        image: "ghcr.io/fluxcd/kustomize-controller"
+    helmController:
+        image: "ghcr.io/fluxcd/helm-controller"
+    imageReflectorController:
+        image: "ghcr.io/fluxcd/image-reflector-controller"
+    imageAutomationController:
+        image: "ghcr.io/fluxcd/image-automation-controller"
 ```
 
 When rendering the `overlays` files, the following values are used:
 
 ```yaml
-fluxCDResourcesPath: "" # The path were the fluxcd resources are lying relative to the overlays
-gitRepoEnvBranch: "" # The branch for this environment to look at
-envPathFluxSystem: "" # The path were the env overlays are located at from the root of the git repo
+# Path from the overlays folder to the resources folder of fluxcd (e.g. ../../../resources/fluxcd)
+fluxCDResourcesPath: ""
+# Path to the env fluxCD folder (e.g. envs/%ENV%/fluxcd)
+fluxCDEnvPath: ""
+# branch of the env (e.g. dev)
+gitRepoEnvBranch: ""
 ```
 
 ### OpenMCP
 
 ```yaml
-openMCPResourcesPath: "" # The path were the fluxcd resources are lying relative to the overlays
+openMCPResourcesPath: "" # The path were the fluxcd resources are lying relative to the overlays (e.g. ../../../resources/openmcp)
 openMCPOperator:
     image: "" # the image of the openmcp operator to use
     tag: "" # the tag of the image of the openmcp operator you want to use for deployment
-
-onboardingClusterKubeconfigSecretName: "" # the secret name for the onboarding cluster; must be located in the openmcp-system namespace
-platformClusterKubeconfigSecretName: "" # the secret name for the platform cluster; must be located in the openmcp-system namespace
 ```

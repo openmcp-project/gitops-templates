@@ -6,6 +6,9 @@ images:
   - name: <openmcp/openmcp-operator>
     newName: {{.Values.openmcpOperator.image }}
     newTag: {{.Values.openmcpOperator.tag | default "latest"}}
+    {{- if .Values.openmcpOperator.digest }}
+    digest: {{ .Values.openmcpOperator.digest }}
+    {{- end }}
 secretGenerator:
   - name: openmcp-operator-config
     namespace: openmcp-system

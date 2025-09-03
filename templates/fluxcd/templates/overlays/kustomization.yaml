@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - {{ .Values.fluxCDResourcesPath }}
 patches:
-- path: gotk-sync-gitrepo.yaml
-- path: gotk-sync-kustomization.yaml
+- path: gitrepo.yaml
+- path: flux-kustomization.yaml
