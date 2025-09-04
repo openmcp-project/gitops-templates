@@ -1,1 +1,1 @@
-# please fill this out
+{{ toYaml .Values.openmcpOperator.config }}
