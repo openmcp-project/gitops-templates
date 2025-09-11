@@ -16,7 +16,7 @@ spec:
       labels:
         app: openmcp-operator
     spec:
-      serviceAccount: openmcp-operator
+      serviceAccountName: openmcp-operator
       initContainers:
         - name: openmcp-operator-init
           image: <openmcp/openmcp-operator>:latest
