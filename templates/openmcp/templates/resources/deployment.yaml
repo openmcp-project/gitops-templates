@@ -22,7 +22,7 @@ spec:
           image: <openmcp/openmcp-operator>:latest
           args:
             - init
-            - --environment={{ .Values.openmcpOperator.environment }}
+            - --environment=<environment>
             - --config=/etc/secret/openmcp-operator-config/config
             - --provider-name=managedcontrolplane
           env:
@@ -64,7 +64,7 @@ spec:
           image: <openmcp/openmcp-operator>:latest
           args:
             - run
-            - --environment={{ .Values.openmcpOperator.environment }}
+            - --environment=<environment>
             - --config=/etc/secret/openmcp-operator-config/config
             - --provider-name=managedcontrolplane
           env:
