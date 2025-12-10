@@ -9,8 +9,21 @@ images:
     {{- if .Values.openmcpOperator.digest }}
     digest: {{ .Values.openmcpOperator.digest }}
     {{- end }}
+
 secretGenerator:
   - name: openmcp-operator-config
     namespace: openmcp-system
     files:
       - config=config/openmcp-operator-config.yaml
+
+patches:
+  - target:
+      kind: Deployment
+      name: openmcp-operator
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/initContainers/0/args/1
+        value: --environment={{ .Values.openmcpOperator.environment }}
+      - op: replace
+        path: /spec/template/spec/containers/0/args/1
+        value: --environment={{ .Values.openmcpOperator.environment }}
