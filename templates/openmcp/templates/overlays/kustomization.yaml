@@ -17,6 +17,9 @@ secretGenerator:
       - config=config/openmcp-operator-config.yaml
 
 patches:
+{{- if .Values.userKustomizationPatches }}
+{{ toYaml .Values.userKustomizationPatches | indent 2 }}
+{{- end }}
   - target:
       kind: Deployment
       name: openmcp-operator
