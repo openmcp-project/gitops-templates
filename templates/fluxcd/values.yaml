@@ -2,13 +2,12 @@
 fluxCDResourcesPath: "../resources"
 # Path to the env fluxCD folder (e.g. envs/%ENV%/fluxcd)
 fluxCDEnvPath: ""
-# branch of the env (e.g. dev)
-gitRepoEnvBranch: ""
 
 # The information for the git repo
 git:
     repoUrl: ""
-    mainBranch: ""
+    # branch of the env (e.g. dev) where the environment clusters flux is pulling from
+    pullBranch: ""
 
 # Image pull secrets to be added to all deployments
 imagePullSecrets: []
