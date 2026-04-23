@@ -15,6 +15,10 @@ spec:
     metadata:
       labels:
         app: openmcp-operator
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
     spec:
       serviceAccountName: openmcp-operator
       initContainers:
@@ -67,6 +71,8 @@ spec:
             - --environment=<environment>
             - --config=/etc/secret/openmcp-operator-config/config
             - --provider-name=managedcontrolplane
+            - --metrics-bind-address=:8080
+            - --metrics-secure=false
           env:
             - name: POD_NAME
               valueFrom:
@@ -97,6 +103,10 @@ spec:
               memory: 1024Mi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+          ports:
+            - name: metrics-http
+              containerPort: 8080
+              protocol: TCP
           volumeMounts:
             - mountPath: /etc/secret/openmcp-operator-config
               name: openmcp-operator-config
