@@ -16,11 +16,11 @@ includes:
 vars:
   MODULE_NAME: "gitops-templates"
   REPO_URL: "github.com/openmcp-project/gitops-templates"
+  ROOT_DIR2: '{{.ROOT_DIR | trimSuffix "/common" | trimSuffix "/hack"}}'
   VERSION:
     sh: 'cat VERSION'
   COMMIT:
     sh: '( cd "{{.ROOT_DIR2}}"; git rev-parse HEAD )'
-  ROOT_DIR2: '{{.ROOT_DIR | trimSuffix "/common" | trimSuffix "/hack"}}'
   TASKFILE_DIR2:
     sh: 'if [[ "{{.TASKFILE_DIR}}" == "{{.ROOT_DIR2}}" ]] || [[ "{{.TASKFILE_DIR}}" == "" ]]; then echo -n "{{.ROOT_DIR2}}/hack/common"; else echo -n "{{.TASKFILE_DIR}}"; fi'
   LOCALBIN: '{{ env "LOCALBIN" | default ( .LOCALBIN | default (print .ROOT_DIR2 "/bin") ) }}'
