@@ -1,15 +1,13 @@
 extends: default
 
-# Helm template expressions {{ }} are valid Go template syntax but not valid
-# YAML. Exclude the rendered template dirs and only lint chart metadata files.
-ignore: |
-  templates/fluxcd/templates/
-  templates/openmcp/templates/
-
 rules:
+  # Helm template expressions {{ }} vary in spacing — relax braces rule
   braces:
     min-spaces-inside: 0
     max-spaces-inside: 1
+  # Helm block tags ({{- if }}, {{- end }}) produce YAML syntax errors — skip
+  syntax: disable
+  # Long generated files (components.yaml) and comments exceed 80 chars
   line-length:
     max: 200
   truthy: disable
