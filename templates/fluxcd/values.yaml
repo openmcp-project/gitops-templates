@@ -8,6 +8,8 @@ git:
     repoUrl: ""
     # branch of the env (e.g. dev) where the environment clusters flux is pulling from
     pullBranch: ""
+    # Flux GitRepository spec.provider. "generic" (default) uses secretRef auth; "github" enables GitHub App auth.
+    provider: "generic"
 
 # Image pull secrets to be added to all deployments
 imagePullSecrets: []
