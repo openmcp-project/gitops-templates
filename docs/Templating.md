@@ -30,6 +30,8 @@ resources files:
 git:
     repoUrl: ""
     mainBranch: ""
+    # Flux GitRepository spec.provider. "generic" (default) uses secretRef auth; "github" enables GitHub App auth.
+    provider: "generic"
 
 # Image pull secrets to be added to all deployments
 imagePullSecrets: []
