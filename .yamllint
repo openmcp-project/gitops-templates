@@ -1,0 +1,6 @@
+extends: default
+ignore: |
+  templates/*/templates/
+rules:
+  line-length: disable
+  indentation: disable
