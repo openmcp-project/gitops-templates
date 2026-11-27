@@ -29,6 +29,11 @@ vars:
   HELM: '{{ .HELM | default (print .LOCALBIN "/helm") }}'
   YAML2JSON: '{{ .YAML2JSON | default (print .LOCALBIN "/yaml2json") }}'
   OCM: '{{ .OCM | default (print .LOCALBIN "/ocm") }}'
+  OS: '{{OS}}'
+  ARCH: '{{ARCH}}'
+  OCM_SIGNING_CONFIG: '{{.ROOT_DIR2}}/signing.yaml'
+  OCM_COMPONENT_DIR: '{{.LOCALTMP}}/component'
+  OCM_COMPONENT: '{{.REPO_URL}}:{{.VERSION}}'
   ENVTEST: '{{ .ENVTEST | default (print .LOCALBIN "/setup-envtest") }}'
 
 tasks:
@@ -40,20 +45,25 @@ tasks:
       vars:
       - VERSION
       - REPO_URL
-    vars:
-      compdir: '{{.LOCALTMP}}/component'
     desc: Build ocm component
+    env:
+      VERSION: '{{.VERSION}}'
+      COMMIT: '{{.COMMIT}}'
+      REPO_URL: '{{.REPO_URL}}'
     cmds:
+      - rm -rf "{{.OCM_COMPONENT_DIR}}"
       - |
-        "{{.OCM}}" add componentversions \
-            --file "{{.compdir}}" \
-            --version "{{.VERSION}}" \
-            --create --force \
-            --settings {{.ROOT_DIR2}}/settings.yaml \
-            --templater subst "{{.ROOT_DIR2}}/component-constructor.yaml" -- \
-            VERSION="{{.VERSION}}" \
-            COMMIT="{{.COMMIT}}" \
-            REPO_URL="{{.REPO_URL}}"
+        "{{.OCM}}" add cv \
+            --constructor "{{.ROOT_DIR2}}/component-constructor.yaml" \
+            --repository "ctf::{{.OCM_COMPONENT_DIR}}"
+
+  sign:
+    deps:
+    - tools:ocm
+    desc: Sign the ocm component keyless with Sigstore. It must have been built before.
+    cmds:
+      - '"{{.OCM}}" sign cv --config "{{.OCM_SIGNING_CONFIG}}" "ctf::{{.OCM_COMPONENT_DIR}}//{{.OCM_COMPONENT}}"'
+
   lint:
     desc: Lint YAML files in templates directory
     cmds:
@@ -62,18 +72,26 @@ tasks:
   push:
     deps:
     - tools:ocm
-    desc: Push to OCM Registry
+    desc: Push to OCM Registry. Fails if the version exists, unless OVERWRITE_COMPONENTS is "true".
     run: once
     requires:
       vars:
       - VERSION
       - LOCALTMP
+    env:
+      OCM_TARGET_REF: '{{.COMPONENT_REGISTRY}}//{{.OCM_COMPONENT}}'
     cmds:
-      - '{{.OCM}} transfer ctf -f {{.compdir}} "{{.COMPONENT_REGISTRY}}" {{.overwrite_mod}}'
+      # ocm replaces existing versions and has no flag to prevent it.
+      - |
+        if [ "${OVERWRITE_COMPONENTS:-false}" = "true" ]; then
+          exit 0
+        fi
+        if "{{.OCM}}" get cv "$OCM_TARGET_REF"; then
+          echo "$OCM_TARGET_REF already exists. Set OVERWRITE_COMPONENTS to 'true' to overwrite it." >&2
+          exit 1
+        fi
+      - '"{{.OCM}}" transfer cv "ctf::{{.OCM_COMPONENT_DIR}}//{{.OCM_COMPONENT}}" "{{.COMPONENT_REGISTRY}}"'
     vars:
-      compdir: '{{.LOCALTMP}}/component'
-      overwrite_mod:
-        sh: 'if [[ -n ${OVERWRITE_COMPONENTS:-} ]] && [[ ${OVERWRITE_COMPONENTS} != "false" ]]; then echo -n "--overwrite"; fi'
       COMPONENT_REGISTRY:
         sh: 'PROJECT_ROOT="{{.ROOT_DIR2}}" hack/common/get-registry.sh --component'
 
