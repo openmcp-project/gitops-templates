@@ -8,6 +8,7 @@ on:
 
 permissions:
   packages: write
+  id-token: write # sign the component version with the workflow identity
 
 env:
   OCI_URL: ghcr.io/openmcp-project
@@ -78,7 +79,13 @@ jobs:
         with:
           version: latest
 
-      - name: Build and Push OCM Component
+      - name: Install cosign
+        uses: sigstore/cosign-installer@881c63bd87e38389154debd8331404ce7ca8a3ab # v4.1.4
+        with:
+          cosign-release: v3.1.4
+
+      - name: Build, Sign and Push OCM Component
         run: |
           task build --verbose
+          task sign --verbose
           task push --verbose

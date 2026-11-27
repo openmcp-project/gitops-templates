@@ -13,6 +13,30 @@ This repo is just containing templates. You can check out the single templates t
 This repository will create a ocm component which contains the templates. This can be used with our bootstrapper cli to setup your platform.
 This helps also to transport these templates into an air-gapped environment.
 
+### Verifying a Release
+
+The OCM component version is signed keyless with [Sigstore](https://www.sigstore.dev/) by the publish workflow.
+
+Verify a component version with the [OCM CLI](https://ocm.software). The expected signer goes into an OCM configuration file:
+
+```yaml
+# verify.yaml
+type: generic.config.ocm.software/v1
+configurations:
+  - type: signing.config.ocm.software/v1alpha1
+    signature: default
+    verifier:
+      type: SigstoreVerificationConfiguration/v1alpha1
+      certificateIdentity: https://github.com/openmcp-project/gitops-templates/.github/workflows/publish.yaml@refs/tags/<version>
+      certificateOIDCIssuer: https://token.actions.githubusercontent.com
+```
+
+```bash
+ocm verify cv --config verify.yaml ghcr.io/openmcp-project/components//github.com/openmcp-project/gitops-templates:<version>
+```
+
+The command fails if the component version is unsigned or was signed by anything other than that workflow for the tag `<version>`.
+
 ## Support, Feedback, Contributing
 
 This project is open to feature requests/suggestions, bug reports etc. via [GitHub issues](https://github.com/openmcp-project/gitops-templates/issues). Contribution and feedback are encouraged and always welcome. For more information about how to contribute, the project structure, as well as additional contribution information, see our [Contribution Guidelines](CONTRIBUTING.md).

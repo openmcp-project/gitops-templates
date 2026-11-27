@@ -31,6 +31,7 @@ vars:
   OCM: '{{ .OCM | default (print .LOCALBIN "/ocm") }}'
   OS: '{{OS}}'
   ARCH: '{{ARCH}}'
+  OCM_SIGNING_CONFIG: '{{.ROOT_DIR2}}/signing.yaml'
   OCM_COMPONENT_DIR: '{{.LOCALTMP}}/component'
   OCM_COMPONENT: '{{.REPO_URL}}:{{.VERSION}}'
   ENVTEST: '{{ .ENVTEST | default (print .LOCALBIN "/setup-envtest") }}'
@@ -55,6 +56,13 @@ tasks:
         "{{.OCM}}" add cv \
             --constructor "{{.ROOT_DIR2}}/component-constructor.yaml" \
             --repository "ctf::{{.OCM_COMPONENT_DIR}}"
+
+  sign:
+    deps:
+    - tools:ocm
+    desc: Sign the ocm component keyless with Sigstore. It must have been built before.
+    cmds:
+      - '"{{.OCM}}" sign cv --config "{{.OCM_SIGNING_CONFIG}}" "ctf::{{.OCM_COMPONENT_DIR}}//{{.OCM_COMPONENT}}"'
 
   lint:
     desc: Lint YAML files in templates directory
