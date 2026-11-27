@@ -10,17 +10,17 @@ components:
       - name: openmcp
         type: fileSystem
         input:
-          type: dir
+          type: Dir/v1
           path: ./templates/openmcp
       - name: fluxcd
         type: fileSystem
         input:
-          type: dir
+          type: Dir/v1
           path: ./templates/fluxcd
       - name: gitops-templates
         type: blob
         version: ${VERSION}
         access:
-          type: gitHub
-          repoUrl: "${REPO_URL}"
+          type: Git/v1
+          repository: "https://${REPO_URL}"
           commit: "${COMMIT}"
